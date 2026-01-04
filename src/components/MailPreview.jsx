@@ -1,7 +1,7 @@
 export default function MailPreview({ mail, onToggleStar, onToggleUnread }) {
   if (!mail) {
     return (
-      <div className="min-w-0 flex-1 p-6">
+      <div className="min-w-0 flex-1 p-6 overflow-y-auto">
         <h3 className="text-lg font-semibold">Select an email</h3>
         <p className="text-white/60 mt-2">Email preview will appear here.</p>
       </div>
@@ -9,7 +9,7 @@ export default function MailPreview({ mail, onToggleStar, onToggleUnread }) {
   }
 
   return (
-    <div className="hidden md:block min-w-0 flex-1 p-6">
+    <div className="min-w-0 flex-1 p-6 overflow-y-auto">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <h2 className="text-xl font-semibold truncate">{mail.subject}</h2>

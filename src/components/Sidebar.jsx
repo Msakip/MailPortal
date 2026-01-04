@@ -1,6 +1,6 @@
 const NAV_ITEMS = [
-  { id: "inbox", label: "Inbox", icon: "📥", count: 12 },
-  { id: "starred", label: "Starred", icon: "⭐", count: 3 },
+  { id: "inbox", label: "Inbox", icon: "📥", count:  2},
+  { id: "starred", label: "Starred", icon: "⭐", count: 1 },
   { id: "spam", label: "Spam", icon: "🛡️", count: 0 },
   { id: "sent", label: "Sent", icon: "📤", count: 0 },
 ];
