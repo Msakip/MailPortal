@@ -9,7 +9,7 @@ export default function MailPreview({ mail, onToggleStar, onToggleUnread }) {
   }
 
   return (
-    <div className="min-w-0 flex-1 p-6">
+    <div className="hidden md:block min-w-0 flex-1 p-6">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <h2 className="text-xl font-semibold truncate">{mail.subject}</h2>

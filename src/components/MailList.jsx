@@ -8,7 +8,7 @@ export default function MailList({
   onToggleUnread,
 }) {
   return (
-    <div className="flex-none w-96 border-r border-white/10 p-4 flex flex-col">
+    <div className="w-full md:flex-none md:w-96 border-r border-white/10 p-4 flex flex-col">
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-semibold">Inbox</h3>
         <span className="text-xs text-white/50">{mails.length}</span>
