@@ -2,6 +2,7 @@ export const mails = [
   {
     id: "1",
     accountId: "acc-gmail",
+    folder: "inbox",
     from: "University Administration",
     subject: "Final exam schedule available",
     snippet: "The final examination schedule for this semester is now available...",
@@ -14,6 +15,7 @@ export const mails = [
   {
     id: "2",
     accountId: "acc-gmail",
+    folder: "inbox",
     from: "Course Coordinator",
     subject: "Project submission reminder",
     snippet: "This is a reminder that the project submission deadline is approaching...",
@@ -26,6 +28,7 @@ export const mails = [
   {
     id: "3",
     accountId: "acc-outlook",
+    folder: "inbox",
     from: "GitHub",
     subject: "Security alert for one of your repositories",
     snippet: "We found a potential security vulnerability...",
@@ -38,6 +41,7 @@ export const mails = [
   {
     id: "4",
     accountId: "acc-outlook",
+    folder: "inbox",
     from: "LinkedIn",
     subject: "You appeared in 5 search results this week",
     snippet: "Your profile appeared in several recruiter searches...",
@@ -47,4 +51,30 @@ export const mails = [
     unread: false,
     starred: false,
   },
+  {
+    id: "5",
+    accountId: "acc-gmail",
+    folder: "sent",
+    from: "Me",
+    subject: "Re: Project submission",
+    snippet: "I have submitted the project via the portal...",
+    body:
+      "Hi,\n\nI have submitted the project via the portal as requested.\n\nBest,\nMe",
+    date: "2026-01-03",
+    unread: false,
+    starred: false,
+  },
+  {
+    id: "6",
+    accountId: "acc-outlook",
+    folder: "spam",
+    from: "Unknown Prince",
+    subject: "Inheritance Opportunity",
+    snippet: "I have a proposition for you...",
+    body:
+      "Dear Friend,\n\nI am a prince and I need your help to transfer $50M...",
+    date: "2026-01-05",
+    unread: true,
+    starred: false,
+  }
 ];
