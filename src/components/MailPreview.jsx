@@ -24,13 +24,27 @@ export default function MailPreview({ mail, onToggleStar, onToggleUnread, onRepl
         <div className="flex items-center gap-2 flex-none">
           <span className="text-sm text-gray-400 dark:text-white/50">{mail.date}</span>
 
-          <button
-            onClick={() => onReply(mail)}
-            className="rounded-xl px-3 py-2 text-sm bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-white"
-            title="Reply"
-          >
-            Reply
-          </button>
+          {mail.folder === 'drafts' ? (
+            <button
+              onClick={() => onReply(mail)} // onReply here will be passed "openDraft" from parent if we wire it up, or we need a new prop? 
+              // Wait, Inbox.jsx passes `onReply={openReply}`. 
+              // If I change Inbox to pass `openDraft` when it is a draft, or just pass `openDraft` as a separate prop.
+              // Let's assume we will pass `onEdit` prop.
+              className="rounded-xl px-3 py-2 text-sm bg-blue-600 text-white border border-blue-500 hover:bg-blue-500 shadow-lg shadow-blue-500/20 transition"
+            >
+              ✐ Edit Draft
+            </button>
+          ) : (
+            <>
+              <button
+                onClick={() => onReply(mail)}
+                className="rounded-xl px-3 py-2 text-sm bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-white"
+                title="Reply"
+              >
+                Reply
+              </button>
+            </>
+          )}
 
           <button
             onClick={() => onDelete(mail.id)}
@@ -40,21 +54,25 @@ export default function MailPreview({ mail, onToggleStar, onToggleUnread, onRepl
             Trash
           </button>
 
-          <button
-            onClick={() => onToggleUnread(mail.id)}
-            className="rounded-xl px-3 py-2 text-sm bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-white"
-          >
-            {mail.unread ? "Mark read" : "Mark unread"}
-          </button>
+          {mail.folder !== 'drafts' && (
+            <>
+              <button
+                onClick={() => onToggleUnread(mail.id)}
+                className="rounded-xl px-3 py-2 text-sm bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-white"
+              >
+                {mail.unread ? "Mark read" : "Mark unread"}
+              </button>
 
-          <button
-            onClick={() => onToggleStar(mail.id)}
-            className="rounded-xl px-3 py-2 text-sm bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-white"
-            aria-label="Star"
-            title={mail.starred ? "Unstar" : "Star"}
-          >
-            {mail.starred ? "★" : "☆"}
-          </button>
+              <button
+                onClick={() => onToggleStar(mail.id)}
+                className="rounded-xl px-3 py-2 text-sm bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-white"
+                aria-label="Star"
+                title={mail.starred ? "Unstar" : "Star"}
+              >
+                {mail.starred ? "★" : "☆"}
+              </button>
+            </>
+          )}
         </div>
       </div>
 

@@ -201,15 +201,49 @@ export function useMailSystem() {
         setIsComposeOpen(true);
     }, []);
 
+    // Settings
+    const [settings, setSettings] = useState(null);
+
+    useEffect(() => {
+        fetch("http://localhost:3001/api/settings")
+            .then(res => res.json())
+            .then(data => setSettings(data))
+            .catch(e => console.error("Failed to load settings", e));
+    }, []);
+
+    const saveSettings = useCallback(async (newSettings) => {
+        try {
+            const res = await fetch("http://localhost:3001/api/settings", {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newSettings)
+            });
+            const data = await res.json();
+            setSettings(data);
+        } catch (e) {
+            console.error("Failed to save settings", e);
+        }
+    }, []);
+
     const sendMail = useCallback((data) => {
+        let bodyToSend = data.body;
+
+        // Append signature if it's a new mail (not a reply to a specific thread, or maybe always? usually always for new/reply)
+        // Simple logic: if settings.signature exists and it's not a draft update (check data.isDraft logic if needed)
+
+        // Actually, let's append signature ONLY when Opening Compose? 
+        // Or when sending? Standard is usually when opening compose so user can edit it.
+        // But the plan said "automatically appended". 
+        // Let's stick to appending when sending for now IF the user hasn't typed it? 
+        // No, standard is to put it in the box when you open it.
+        // Let's change strategy: Update `openCompose` to include signature.
+
         const newMailData = {
             ...data,
             accountId: activeAccount,
             folder: data.isDraft ? "drafts" : "sent"
         };
-
-        // Optimistic UI update (optional, but good for perceived speed)
-        // Actually, let's wait for server response to get the real ID.
+        // ... (rest of sendMail)
 
         fetch(API_URL, {
             method: 'POST',
@@ -224,7 +258,63 @@ export function useMailSystem() {
 
         setIsComposeOpen(false);
         setComposeInitData(null);
-    }, [activeAccount]);
+    }, [activeAccount, settings]); // Added settings dep
+
+    // Enhanced openCompose to include signature
+    const openCompose = useCallback(() => {
+        let str = "";
+        if (settings?.signature) {
+            str = settings.signature;
+        }
+        setComposeInitData({ body: str });
+        setIsComposeOpen(true);
+    }, [settings]);
+
+
+    return {
+        // ... OLD returns
+        // State
+        mails,
+        search,
+        activeAccount,
+        activeNav,
+        isComposeOpen,
+        composeInitData,
+        mobileView,
+        selectedIds,
+        theme,
+        settings, // New
+        // Computed
+        gmailCount,
+        outlookCount,
+        filteredMails,
+        selectedMail,
+        selectedId,
+        // Actions
+        setSearch,
+        setIsComposeOpen, // Note: We might want to use openCompose instead of setting true directly in UI
+        setComposeInitData,
+        setMobileView,
+        toggleStar,
+        toggleUnread,
+        selectMail,
+        deleteMail,
+        openReply,
+        openDraft,
+        sendMail,
+        handleAccountChange,
+        handleNavChange,
+        toggleSelection,
+        toggleTheme,
+        saveSettings, // New
+        openCompose, // New
+        // Bulk
+        markAllRead,
+        markAllUnread,
+        starAll,
+        unstarAll,
+        deleteSelected,
+    };
 
     const handleAccountChange = useCallback((id) => {
         setActiveAccount(id);
@@ -314,6 +404,78 @@ export function useMailSystem() {
     }, [filteredMails, selectedId, deleteMail, openReply]);
 
 
+    const openDraft = useCallback((mail) => {
+        setComposeInitData({
+            id: mail.id, // Track that we are editing an existing draft
+            to: mail.to || "", // Drafts might not have all fields
+            subject: mail.subject,
+            body: mail.body,
+            isDraft: true
+        });
+        setIsComposeOpen(true);
+    }, []);
+
+    // Bulk Actions
+    const markAllRead = useCallback(() => {
+        selectedIds.forEach(id => {
+            // Optimistic
+            setMails(prev => prev.map(m => m.id === id ? { ...m, unread: false } : m));
+            // API
+            fetch(`${API_URL}/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ unread: false })
+            }).catch(e => console.error("Failed to mark read", e));
+        });
+        setSelectedIds(new Set());
+    }, [selectedIds, mails]);
+
+    const markAllUnread = useCallback(() => {
+        selectedIds.forEach(id => {
+            setMails(prev => prev.map(m => m.id === id ? { ...m, unread: true } : m));
+            fetch(`${API_URL}/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ unread: true })
+            }).catch(e => console.error("Failed to mark unread", e));
+        });
+        setSelectedIds(new Set());
+    }, [selectedIds, mails]);
+
+    const starAll = useCallback(() => {
+        selectedIds.forEach(id => {
+            const mail = mails.find(m => m.id === id);
+            if (!mail) return;
+            const newStarred = !mail.starred; // Toggle or set true? Usually tools set to specific state. Let's make this "Star" (true). 
+            // Actually usually it's "Star" or "Unstar". Let's assume "Star".
+            setMails(prev => prev.map(m => m.id === id ? { ...m, starred: true } : m));
+            fetch(`${API_URL}/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ starred: true })
+            }).catch(e => console.error("Failed to star", e));
+        });
+        setSelectedIds(new Set());
+    }, [selectedIds, mails]);
+
+    const unstarAll = useCallback(() => {
+        selectedIds.forEach(id => {
+            setMails(prev => prev.map(m => m.id === id ? { ...m, starred: false } : m));
+            fetch(`${API_URL}/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ starred: false })
+            }).catch(e => console.error("Failed to unstar", e));
+        });
+        setSelectedIds(new Set());
+    }, [selectedIds, mails]);
+
+    // Multi-delete
+    const deleteSelected = useCallback(() => {
+        deleteMail(); // deleteMail already handles selectedIds
+    }, [deleteMail]);
+
+
     return {
         // State
         mails,
@@ -324,7 +486,7 @@ export function useMailSystem() {
         composeInitData,
         mobileView,
         selectedIds,
-        theme, // New
+        theme,
         // Computed
         gmailCount,
         outlookCount,
@@ -341,10 +503,17 @@ export function useMailSystem() {
         selectMail,
         deleteMail,
         openReply,
+        openDraft, // New
         sendMail,
         handleAccountChange,
         handleNavChange,
         toggleSelection,
-        toggleTheme // New
+        toggleTheme,
+        // Bulk
+        markAllRead,
+        markAllUnread,
+        starAll,
+        unstarAll,
+        deleteSelected
     };
 }

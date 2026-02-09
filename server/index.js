@@ -3,11 +3,22 @@ const cors = require('cors');
 const app = express();
 const port = 3001;
 
+const fs = require('fs');
+const path = require('path');
+
 app.use(cors());
 app.use(express.json());
 
-// In-memory database (seeded with initial data)
-let mails = [
+const DATA_DIR = path.join(__dirname, 'data');
+const DATA_FILE = path.join(DATA_DIR, 'mails.json');
+
+// Ensure data directory exists
+if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+
+// Initial Seed Data
+const seedMails = [
     {
         id: "1",
         accountId: "acc-gmail",
@@ -70,6 +81,31 @@ let mails = [
     },
 ];
 
+// Helper to load mails
+function loadMails() {
+    try {
+        if (fs.existsSync(DATA_FILE)) {
+            const data = fs.readFileSync(DATA_FILE, 'utf8');
+            return JSON.parse(data);
+        }
+    } catch (e) {
+        console.error("Failed to load mails:", e);
+    }
+    return seedMails;
+}
+
+// Helper to save mails
+function saveMails(mailsData) {
+    try {
+        fs.writeFileSync(DATA_FILE, JSON.stringify(mailsData, null, 2));
+    } catch (e) {
+        console.error("Failed to save mails:", e);
+    }
+}
+
+// Load initial state
+let mails = loadMails();
+
 // GET /api/mails - Fetch all mails
 app.get('/api/mails', (req, res) => {
     res.json(mails);
@@ -91,6 +127,7 @@ app.post('/api/mails', (req, res) => {
     };
 
     mails.unshift(newMail);
+    saveMails(mails);
     res.status(201).json(newMail);
 });
 
@@ -102,6 +139,7 @@ app.put('/api/mails/:id', (req, res) => {
     const index = mails.findIndex(m => m.id === id);
     if (index !== -1) {
         mails[index] = { ...mails[index], ...updates };
+        saveMails(mails);
         res.json(mails[index]);
     } else {
         res.status(404).json({ error: "Mail not found" });
@@ -112,7 +150,48 @@ app.put('/api/mails/:id', (req, res) => {
 app.delete('/api/mails/:id', (req, res) => {
     const { id } = req.params;
     mails = mails.filter(m => m.id !== id);
+    saveMails(mails);
     res.status(204).send();
+});
+
+// Settings File
+const SETTINGS_FILE = path.join(DATA_DIR, 'settings.json');
+const DEFAULT_SETTINGS = {
+    name: "User",
+    signature: "\n\nCheers,\nUser"
+};
+
+function loadSettings() {
+    try {
+        if (fs.existsSync(SETTINGS_FILE)) {
+            return JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8'));
+        }
+    } catch (e) {
+        console.error("Failed to load settings:", e);
+    }
+    return DEFAULT_SETTINGS;
+}
+
+function saveSettings(settings) {
+    try {
+        fs.writeFileSync(SETTINGS_FILE, JSON.stringify(settings, null, 2));
+    } catch (e) {
+        console.error("Failed to save settings:", e);
+    }
+}
+
+let settings = loadSettings();
+
+// GET /api/settings
+app.get('/api/settings', (req, res) => {
+    res.json(settings);
+});
+
+// PUT /api/settings
+app.put('/api/settings', (req, res) => {
+    settings = { ...settings, ...req.body };
+    saveSettings(settings);
+    res.json(settings);
 });
 
 app.listen(port, () => {

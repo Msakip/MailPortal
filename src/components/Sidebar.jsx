@@ -108,6 +108,22 @@ export default function Sidebar({
         </div>
       </div>
 
+      {/* Part 3: Settings */}
+      <div className="mt-6">
+        <button
+          onClick={() => onNavChange('settings')}
+          className={[
+            "w-full flex items-center gap-3 rounded-xl px-3 py-2 text-sm border transition",
+            activeNav === 'settings'
+              ? "bg-white shadow-sm border-gray-200 dark:bg-white/10 dark:border-white/20 text-gray-900 dark:text-white"
+              : "bg-transparent border-transparent hover:bg-black/5 dark:hover:bg-white/5 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white",
+          ].join(" ")}
+        >
+          <span>⚙️</span>
+          <span>Settings</span>
+        </button>
+      </div>
+
       {/* Theme Toggle */}
       <div className="mt-4 pt-4 border-t border-gray-200 dark:border-white/10">
         <button
