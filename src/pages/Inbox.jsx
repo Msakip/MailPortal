@@ -2,10 +2,20 @@ import Sidebar from "../components/Sidebar";
 import MailList from "../components/MailList";
 import MailPreview from "../components/MailPreview";
 import ComposeModal from "../components/ComposeModal";
-import SettingsPage from "../pages/SettingsPage"; // Added
+import SettingsPage from "../pages/SettingsPage";
 import { useMailSystem } from "../hooks/useMailSystem";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Inbox() {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   const {
     // State
     search,
@@ -64,6 +74,7 @@ export default function Inbox() {
           onCompose={openCompose} // Use openCompose
           theme={theme}
           onToggleTheme={toggleTheme}
+          onLogout={handleLogout}
         />
 
         {activeNav === 'settings' ? (

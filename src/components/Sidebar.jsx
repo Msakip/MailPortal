@@ -19,7 +19,8 @@ export default function Sidebar({
   onAccountChange = () => { },
   onCompose = () => { },
   theme = "dark",
-  onToggleTheme = () => { }
+  onToggleTheme = () => { },
+  onLogout = () => { }
 }) {
   return (
     <aside className="hidden md:flex flex-none w-64 border-r border-gray-200 dark:border-white/10 p-4 flex-col bg-gray-50 dark:bg-gray-950 transition-colors duration-200">
@@ -125,12 +126,19 @@ export default function Sidebar({
       </div>
 
       {/* Theme Toggle */}
-      <div className="mt-4 pt-4 border-t border-gray-200 dark:border-white/10">
+      <div className="mt-4 pt-4 border-t border-gray-200 dark:border-white/10 space-y-2">
         <button
           onClick={onToggleTheme}
           className="w-full flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 transition"
         >
           {theme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode"}
+        </button>
+
+        <button
+          onClick={onLogout}
+          className="w-full flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 hover:bg-red-100 dark:hover:bg-red-500/20 text-red-600 dark:text-red-400 transition"
+        >
+          🚪 Logout
         </button>
       </div>
     </aside>
