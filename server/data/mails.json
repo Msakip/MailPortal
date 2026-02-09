@@ -1,0 +1,62 @@
+[
+  {
+    "id": "1770670833881",
+    "accountId": "acc-gmail",
+    "folder": "sent",
+    "from": "Me",
+    "subject": "Test",
+    "snippet": "",
+    "body": "This is a test mail\n\nBest Regards,\nUser",
+    "date": "2026-02-09",
+    "unread": false,
+    "starred": false
+  },
+  {
+    "id": "1770670175870",
+    "accountId": "acc-gmail",
+    "folder": "sent",
+    "from": "Me",
+    "subject": "Re: Coming soon: New formatting",
+    "snippet": "",
+    "body": "\n\n\n> Hi there,\n> \n> We are making some changes to our viewer experience. Stay tuned for mostly minor updates.\n> \n> Enjoy watching!",
+    "date": "2026-02-09",
+    "unread": false,
+    "starred": false
+  },
+  {
+    "id": "3",
+    "accountId": "acc-gmail",
+    "folder": "inbox",
+    "from": "Spotify",
+    "subject": "Your Weekly Discover Weekly",
+    "snippet": "Check out the new music we found just for you...",
+    "body": "Your weekly mixtape is ready. Dive in and discover your next favorite track.",
+    "date": "2023-10-24",
+    "unread": true,
+    "starred": false
+  },
+  {
+    "id": "4",
+    "accountId": "acc-outlook",
+    "folder": "inbox",
+    "from": "Boss",
+    "subject": "Project Deadline",
+    "snippet": "Just a reminder that the project deadline is approaching...",
+    "body": "Hey,\n\nDon't forget the Q4 report is due this Friday. Let me know if you need any resources.\n\nThanks,\nBoss",
+    "date": "2023-10-23",
+    "unread": false,
+    "starred": true
+  },
+  {
+    "id": "5",
+    "accountId": "acc-gmail",
+    "folder": "sent",
+    "from": "Me",
+    "subject": "Re: Project Deadline",
+    "snippet": "I will have it done by Friday, no worries...",
+    "body": "Hi Boss,\n\nI'm on track to finish by Friday. Will send a draft tomorrow.\n\nBest,\nMe",
+    "date": "2023-10-23",
+    "unread": false,
+    "starred": false
+  }
+]

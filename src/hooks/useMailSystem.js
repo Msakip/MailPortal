@@ -270,52 +270,6 @@ export function useMailSystem() {
         setIsComposeOpen(true);
     }, [settings]);
 
-
-    return {
-        // ... OLD returns
-        // State
-        mails,
-        search,
-        activeAccount,
-        activeNav,
-        isComposeOpen,
-        composeInitData,
-        mobileView,
-        selectedIds,
-        theme,
-        settings, // New
-        // Computed
-        gmailCount,
-        outlookCount,
-        filteredMails,
-        selectedMail,
-        selectedId,
-        // Actions
-        setSearch,
-        setIsComposeOpen, // Note: We might want to use openCompose instead of setting true directly in UI
-        setComposeInitData,
-        setMobileView,
-        toggleStar,
-        toggleUnread,
-        selectMail,
-        deleteMail,
-        openReply,
-        openDraft,
-        sendMail,
-        handleAccountChange,
-        handleNavChange,
-        toggleSelection,
-        toggleTheme,
-        saveSettings, // New
-        openCompose, // New
-        // Bulk
-        markAllRead,
-        markAllUnread,
-        starAll,
-        unstarAll,
-        deleteSelected,
-    };
-
     const handleAccountChange = useCallback((id) => {
         setActiveAccount(id);
         setActiveNav("inbox");
@@ -487,6 +441,7 @@ export function useMailSystem() {
         mobileView,
         selectedIds,
         theme,
+        settings, // Added
         // Computed
         gmailCount,
         outlookCount,
@@ -503,12 +458,14 @@ export function useMailSystem() {
         selectMail,
         deleteMail,
         openReply,
-        openDraft, // New
+        openDraft,
         sendMail,
         handleAccountChange,
         handleNavChange,
         toggleSelection,
         toggleTheme,
+        saveSettings, // Added
+        openCompose, // Added
         // Bulk
         markAllRead,
         markAllUnread,
